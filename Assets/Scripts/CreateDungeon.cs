@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CreateDungeon : MonoBehaviour
 {
-    const int MapWidth = 70;        // 盤面のサイズの横幅
-    const int MapHeight = 70;       // 盤面のサイズの縦幅
+    const int MapWidth = CommonConst.MapWidth;        // 盤面のサイズの横幅
+    const int MapHeight = CommonConst.MapHeight;       // 盤面のサイズの縦幅
     const int MinRoom = 5;          // 最小の部屋の個数
     const int MaxRoom = 15;         // 最大の部屋の個数
     const int MinRoomWidth = 5;     // 部屋の最小の横幅
@@ -14,10 +14,19 @@ public class CreateDungeon : MonoBehaviour
     const int MaxRoomHeight = 30;   // 部屋の最大の縦幅
     const int MaxRoomArea = 300;    // 部屋の最大の面積
     const int MinRoomDistance = 5;  // 部屋同士の最小の距離
-    const int UpDirection = 0;      // 上方向
-    const int RightDirection = 1;   // 右方向
-    const int DownDirection = 2;    // 下方向
-    const int LeftDirection = 3;    // 左方向
+    const int UpDirection = CommonConst.UpDirection;      // 上方向
+    const int RightDirection = CommonConst.RightDirection;   // 右方向
+    const int DownDirection = CommonConst.DownDirection;    // 下方向
+    const int LeftDirection = CommonConst.LeftDirection;    // 左方向
+
+
+    List<Room> rooms;
+    List<Path> paths;
+    int[,] map = new int[MapWidth, MapHeight];
+
+    public List<Room> Rooms => rooms;
+    public List<Path> Paths => paths;
+    public int[,] Map => map;
 
     private void MapView(int[,] map){
         string mapString = "";
@@ -70,7 +79,7 @@ public class CreateDungeon : MonoBehaviour
     // ダンジョンを作成するアルゴリズム
     void Start()
     {
-        List<Room> rooms = FindRoomsPosition(); // 部屋の個数を気にせずに作成する
+        rooms = FindRoomsPosition(); // 部屋の個数を気にせずに作成する
         // 部屋の個数がMinRoom以下の場合は再生成
         while(rooms.Count < MinRoom){
             rooms = FindRoomsPosition();
@@ -81,7 +90,7 @@ public class CreateDungeon : MonoBehaviour
             rooms.RemoveAt(removeIndex);
         }
         var tuppleData = CreatePath(rooms);     // 部屋同士のパスを作成する
-        List<Path> paths = tuppleData.Item1;
+        paths = tuppleData.Item1;
         List<List<RoomDistanceWithIndex>> roomDistancesWithIndex = tuppleData.Item2; // 部屋同士の距離を持つリスト
         // ここでは作成されたパスがすべてのノードを繋いでいるかどうかをDFSで確認する
         List<bool> isConnectedAllRooms = IsConnectedAllRooms(rooms, paths);
@@ -114,7 +123,6 @@ public class CreateDungeon : MonoBehaviour
         }
 
 
-        int[,] map = new int[MapWidth, MapHeight];
         for(int y = 0; y < MapHeight; ++y){
             for(int x = 0; x < MapWidth; ++x){
                 map[x, y] = 0;
