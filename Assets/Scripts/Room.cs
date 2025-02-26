@@ -20,6 +20,11 @@ public class Room
         {
             throw new System.ArgumentException("upperLeftPosition must be positive");
         }
+
+        if(upperLeftPosition.x + size.x > CommonConst.MapWidth || upperLeftPosition.y + size.y > CommonConst.MapHeight)
+        {
+            throw new System.ArgumentException("room is out of map");
+        }
         _upperLeftPosition = upperLeftPosition;
         _size = size;
     }
