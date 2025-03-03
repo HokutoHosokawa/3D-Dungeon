@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-10)]
 public class CreateDungeon : MonoBehaviour
 {
     const int MapWidth = CommonConst.MapWidth;        // 盤面のサイズの横幅
@@ -22,7 +23,7 @@ public class CreateDungeon : MonoBehaviour
 
     List<Room> rooms;
     List<Path> paths;
-    int[,] map = new int[MapWidth, MapHeight];
+    int[,] map = new int[MapHeight, MapWidth];
 
     public List<Room> Rooms => rooms;
     public List<Path> Paths => paths;
@@ -32,7 +33,7 @@ public class CreateDungeon : MonoBehaviour
         string mapString = "";
         for(int y = 0; y < MapHeight; ++y){
             for(int x = 0; x < MapWidth; ++x){
-                if(map[x, y] == 1){
+                if(map[y, x] == 1){
                     mapString += "■";
                 }else{
                     mapString += "□";
@@ -125,13 +126,13 @@ public class CreateDungeon : MonoBehaviour
 
         for(int y = 0; y < MapHeight; ++y){
             for(int x = 0; x < MapWidth; ++x){
-                map[x, y] = 0;
+                map[y, x] = 0;
             }
         }
         foreach(Room room in rooms){
             for(int y = room.UpperLeftPosition.y; y < room.UpperLeftPosition.y + room.Size.y; ++y){
                 for(int x = room.UpperLeftPosition.x; x < room.UpperLeftPosition.x + room.Size.x; ++x){
-                    map[x, y] = 1;
+                    map[y, x] = 1;
                 }
             }
         }
@@ -156,17 +157,17 @@ public class CreateDungeon : MonoBehaviour
                     int y = room2Y + room2PathStartPos;
                     if(room2Direction == RightDirection){
                         for(int i = room2X + room2Width; i < x; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                         for(int i = y; i < room1Y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                     }else if(room2Direction == LeftDirection){
                         for(int i = x; i < room2X; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                         for(int i = y; i < room1Y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                     }
                 }else if(room1Direction == DownDirection){
@@ -174,17 +175,17 @@ public class CreateDungeon : MonoBehaviour
                     int y = room2Y + room2PathStartPos;
                     if(room2Direction == RightDirection){
                         for(int i = room2X + room2Width; i < x; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                         for(int i = room1Y + room1Height; i <= y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                     }else if(room2Direction == LeftDirection){
                         for(int i = x; i < room2X; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                         for(int i = room1Y + room1Height; i < y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                     }
                 }else if(room1Direction == RightDirection){
@@ -192,17 +193,17 @@ public class CreateDungeon : MonoBehaviour
                     int y = room1Y + room1PathStartPos;
                     if(room2Direction == UpDirection){
                         for(int i = y; i < room2Y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                         for(int i = room1X + room1Width; i < x; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                     }else if(room2Direction == DownDirection){
                         for(int i = room2Y + room2Height; i <= y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                         for(int i = room1X + room1Width; i < x; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                     }
                 }else if(room1Direction == LeftDirection){
@@ -210,17 +211,17 @@ public class CreateDungeon : MonoBehaviour
                     int y = room1Y + room1PathStartPos;
                     if(room2Direction == UpDirection){
                         for(int i = y; i < room2Y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                         for(int i = x; i < room1X; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                     }else if(room2Direction == DownDirection){
                         for(int i = room2Y + room2Height; i < y; ++i){
-                            map[x, i] = 1;
+                            map[i, x] = 1;
                         }
                         for(int i = x; i < room1X; ++i){
-                            map[i, y] = 1;
+                            map[y, i] = 1;
                         }
                     }
                 }
@@ -265,24 +266,24 @@ public class CreateDungeon : MonoBehaviour
                     if(UpperXPos < LowerXPos){
                         int i;
                         for(i = UpperRoomY + UpperRoomHeight; i < UpperRoomY + UpperRoomHeight + CurvePosFromUpperRoom; ++i){
-                            map[UpperXPos, i] = 1;
+                            map[i, UpperXPos] = 1;
                         }
                         for(int j = UpperXPos; j < LowerXPos; ++j){
-                            map[j, i] = 1;
+                            map[i, j] = 1;
                         }
                         for(int j = i; j < LowerRoomY; ++j){
-                            map[LowerXPos, j] = 1;
+                            map[j, LowerXPos] = 1;
                         }
                     }else{
                         int i;
                         for(i = UpperRoomY + UpperRoomHeight; i < UpperRoomY + UpperRoomHeight + CurvePosFromUpperRoom; ++i){
-                            map[UpperXPos, i] = 1;
+                            map[i, UpperXPos] = 1;
                         }
                         for(int j = UpperXPos; j > LowerXPos; --j){
-                            map[j, i] = 1;
+                            map[i, j] = 1;
                         }
                         for(int j = i; j < LowerRoomY; ++j){
-                            map[LowerXPos, j] = 1;
+                            map[j, LowerXPos] = 1;
                         }
                     }
                 }else if(room1Direction == RightDirection || room1Direction == LeftDirection){
@@ -322,24 +323,24 @@ public class CreateDungeon : MonoBehaviour
                     if(LeftYPos < RightYPos){
                         int i;
                         for(i = LeftRoomX + LeftRoomWidth; i < LeftRoomX + LeftRoomWidth + CurvePosFromLeftRoom; ++i){
-                            map[i, LeftYPos] = 1;
+                            map[LeftYPos, i] = 1;
                         }
                         for(int j = LeftYPos; j < RightYPos; ++j){
-                            map[i, j] = 1;
+                            map[j, i] = 1;
                         }
                         for(int j = i; j < RightRoomX; ++j){
-                            map[j, RightYPos] = 1;
+                            map[RightYPos, j] = 1;
                         }
                     }else{
                         int i;
                         for(i = LeftRoomX + LeftRoomWidth; i < LeftRoomX + LeftRoomWidth + CurvePosFromLeftRoom; ++i){
-                            map[i, LeftYPos] = 1;
+                            map[LeftYPos, i] = 1;
                         }
                         for(int j = LeftYPos; j > RightYPos; --j){
-                            map[i, j] = 1;
+                            map[j, i] = 1;
                         }
                         for(int j = i; j < RightRoomX; ++j){
-                            map[j, RightYPos] = 1;
+                            map[RightYPos, j] = 1;
                         }
                     }
                 }
@@ -347,12 +348,6 @@ public class CreateDungeon : MonoBehaviour
         }
         MapView(map);
     }
-
-    // Update is called once per frame
-    // void Update()
-    // {
-        
-    // }
 
     // FindRoomsPosition関数で用いる既存の部屋との距離を計算し、有効かどうか判定する関数
     private bool IsValidRoom(Room newRoom, IEnumerable<Room> rooms){
