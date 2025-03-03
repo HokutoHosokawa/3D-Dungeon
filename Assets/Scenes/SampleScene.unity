@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 181427858}
   - component: {fileID: 181427857}
+  - component: {fileID: 181427859}
   m_Layer: 0
   m_Name: CreateDungeonObject
   m_TagString: Untagged
@@ -166,6 +167,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &181427859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181427856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12593784a4648f340a69127cad3bcf01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _floorPrefab: {fileID: 8431124235223479144, guid: 6073e0b8aee233546bac9c5311509c02, type: 3}
+  _wallPrefab: {fileID: 6044451309980079512, guid: bbd6cf92a771868499e936f4eb9830ab, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
