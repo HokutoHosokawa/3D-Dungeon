@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[DefaultExecutionOrder(-10)]
-public class CreateDungeon : MonoBehaviour
+
+public class CreateDungeon
 {
     const int MapWidth = CommonConst.MapWidth;        // 盤面のサイズの横幅
     const int MapHeight = CommonConst.MapHeight;       // 盤面のサイズの縦幅
@@ -28,6 +28,10 @@ public class CreateDungeon : MonoBehaviour
     public List<Room> Rooms => rooms;
     public List<Path> Paths => paths;
     public int[,] Map => map;
+
+    public CreateDungeon(){
+        Create();
+    }
 
     private void MapView(int[,] map){
         string mapString = "";
@@ -78,7 +82,7 @@ public class CreateDungeon : MonoBehaviour
 
 
     // ダンジョンを作成するアルゴリズム
-    void Start()
+    private void Create()
     {
         rooms = FindRoomsPosition(); // 部屋の個数を気にせずに作成する
         // 部屋の個数がMinRoom以下の場合は再生成
