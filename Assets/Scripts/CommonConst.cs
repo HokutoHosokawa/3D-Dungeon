@@ -5,6 +5,7 @@ using UnityEngine;
 public static class CommonConst
 {
     // 共通の定数を定義する
+    public const int MaxFloor = 2;          // 階層数
     public const int MapWidth = 70;        // 盤面のサイズの横幅
     public const int MapHeight = 70;       // 盤面のサイズの縦幅
     public const int UpDirection = 0;      // 上方向
