@@ -84,42 +84,6 @@ public static class CreateRoom3DView
                             meshRenderer.material = floorManagement.WallFloorMaterial;
                         }
                         mapObjects.Add(stairs);
-                        // GameObject stair, stair2, stair2wall, stair2wall2;
-                        // if(stairDirection == CommonConst.UpDirection){
-                        //     stair = GameObject.Instantiate(stairPrefab, new Vector3(x, - WallHeight / 2.0f, y), Quaternion.AngleAxis(180, Vector3.up));
-                        //     stair2 = GameObject.Instantiate(stairPrefab, new Vector3(x, - 3 * WallHeight / 2.0f, y - 1), Quaternion.AngleAxis(180, Vector3.up));
-                        //     stair2wall = GameObject.Instantiate(wallPrefab, new Vector3(x - (WallHeight + WallThickness)/2.0f, - WallHeight/2.0f, y - 1), wallRotations[0]);
-                        //     stair2wall2 = GameObject.Instantiate(wallPrefab, new Vector3(x + (WallHeight + WallThickness)/2.0f, - WallHeight/2.0f, y - 1), wallRotations[0]);
-                        // }else if(stairDirection == CommonConst.RightDirection){
-                        //     stair = GameObject.Instantiate(stairPrefab, new Vector3(x, - WallHeight / 2.0f, y), Quaternion.AngleAxis(90, Vector3.up));
-                        //     stair2 = GameObject.Instantiate(stairPrefab, new Vector3(x + 1, - 3 * WallHeight / 2.0f, y), Quaternion.AngleAxis(90, Vector3.up));
-                        //     stair2wall = GameObject.Instantiate(wallPrefab, new Vector3(x + 1, - WallHeight/2.0f, y - (WallHeight + WallThickness)/2.0f), wallRotations[1]);
-                        //     stair2wall2 = GameObject.Instantiate(wallPrefab, new Vector3(x + 1, - WallHeight/2.0f, y + (WallHeight + WallThickness)/2.0f), wallRotations[1]);
-                        // }else if(stairDirection == CommonConst.DownDirection){
-                        //     stair = GameObject.Instantiate(stairPrefab, new Vector3(x, - WallHeight / 2.0f, y), Quaternion.AngleAxis(0, Vector3.up));
-                        //     stair2 = GameObject.Instantiate(stairPrefab, new Vector3(x, - 3 * WallHeight / 2.0f, y + 1), Quaternion.AngleAxis(0, Vector3.up));
-                        //     stair2wall = GameObject.Instantiate(wallPrefab, new Vector3(x - (WallHeight + WallThickness)/2.0f, - WallHeight/2.0f, y + 1), wallRotations[0]);
-                        //     stair2wall2 = GameObject.Instantiate(wallPrefab, new Vector3(x + (WallHeight + WallThickness)/2.0f, - WallHeight/2.0f, y + 1), wallRotations[0]);
-                        // }else{
-                        //     stair = GameObject.Instantiate(stairPrefab, new Vector3(x, - WallHeight / 2.0f, y), Quaternion.AngleAxis(270, Vector3.up));
-                        //     stair2 = GameObject.Instantiate(stairPrefab, new Vector3(x - 1, - 3 * WallHeight / 2.0f, y), Quaternion.AngleAxis(270, Vector3.up));
-                        //     stair2wall = GameObject.Instantiate(wallPrefab, new Vector3(x - 1, - WallHeight/2.0f, y - (WallHeight + WallThickness)/2.0f), wallRotations[1]);
-                        //     stair2wall2 = GameObject.Instantiate(wallPrefab, new Vector3(x - 1, - WallHeight/2.0f, y + (WallHeight + WallThickness)/2.0f), wallRotations[1]);
-                        // }
-                        // MeshRenderer[] meshRenderers = stair.GetComponentsInChildren<MeshRenderer>();
-                        // foreach(MeshRenderer meshRenderer in meshRenderers){
-                        //     meshRenderer.material = floorManagement.WallFloorMaterial;
-                        // }
-                        // MeshRenderer[] meshRenderers2 = stair2.GetComponentsInChildren<MeshRenderer>();
-                        // foreach(MeshRenderer meshRenderer in meshRenderers2){
-                        //     meshRenderer.material = floorManagement.WallFloorMaterial;
-                        // }
-                        // stair2wall.GetComponent<Renderer>().material = floorManagement.WallFloorMaterial;
-                        // stair2wall2.GetComponent<Renderer>().material = floorManagement.WallFloorMaterial;
-                        // mapObjects.Add(stair);
-                        // mapObjects.Add(stair2);
-                        // mapObjects.Add(stair2wall);
-                        // mapObjects.Add(stair2wall2);
                     }
                     continue;
                 }
