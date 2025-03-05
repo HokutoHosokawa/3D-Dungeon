@@ -17,6 +17,7 @@ public static class CreateRoom3DView
         GameObject floorPrefab = Resources.Load<GameObject>("Prefabs/PlaneFloor");
         GameObject wallPrefab = Resources.Load<GameObject>("Prefabs/PlaneWall");
         GameObject stairPrefab = Resources.Load<GameObject>("Prefabs/Stairs");
+        GameObject clearOrbPrefab = Resources.Load<GameObject>("Prefabs/MagicOrb");
         CreateDungeon createDungeon = floorManagement.CreateDungeon;
         List<GameObject> mapObjects = new List<GameObject>();
         int[,] map = createDungeon.Map;
@@ -86,6 +87,10 @@ public static class CreateRoom3DView
                         mapObjects.Add(stairs);
                     }
                     continue;
+                }
+                if(floorManagement.Floor == CommonConst.MaxFloor && x == floorClearRoom.UpperLeftPosition.x + floorClearPosition.x && y == floorClearRoom.UpperLeftPosition.y + floorClearPosition.y){
+                    GameObject clearOrb = GameObject.Instantiate(clearOrbPrefab, new Vector3(x, WallHeight / 2.0f, y), Quaternion.identity);
+                    mapObjects.Add(clearOrb);
                 }
                 // 床と天井を生成
                 GameObject floor = GameObject.Instantiate(floorPrefab, new Vector3(x, 0, y), Quaternion.identity);

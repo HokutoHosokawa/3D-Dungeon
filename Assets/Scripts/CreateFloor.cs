@@ -23,11 +23,6 @@ public class CreateFloor : MonoBehaviour
         {
             throw new System.ArgumentException("Floor must be less than or equal to CommonConst.MaxFloor.");
         }
-        if(currentFloor == CommonConst.MaxFloor)
-        {
-            // 最終階層はクリアするためのオーブを作成
-            return;
-        }
         if(floorManagements[currentFloor - 1] != null)
         {
             // 既に作成済みの階層は作成しない
