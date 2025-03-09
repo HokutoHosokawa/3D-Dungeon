@@ -5,6 +5,7 @@ using UnityEngine;
 // 階層の作成、描画を行うクラス
 public class CreateFloor : MonoBehaviour
 {
+    [SerializeField] GameObject _player;
     private int _currentFloor = 1;
     private FloorManagement[] floorManagements = new FloorManagement[CommonConst.MaxFloor];
     // Start is called before the first frame update
@@ -32,6 +33,15 @@ public class CreateFloor : MonoBehaviour
         Material mat = Resources.Load<Material>("Materials/StoneWall");
         floorManagements[currentFloor - 1] = new FloorManagement(currentFloor, mat);
         CreateRoom3DView.ViewStart(floorManagements[currentFloor - 1]);
+        // プレイヤーの初期位置を設定
+        int playerStartRoomIndex = Random.Range(0, floorManagements[currentFloor - 1].CreateDungeon.Rooms.Count - 1);
+        if(playerStartRoomIndex >= floorManagements[currentFloor - 1].FloorClearRoomIndex)
+        {
+            // クリアルームと同じ部屋にプレイヤーがいないようにする
+            playerStartRoomIndex++;
+        }
+        Room playerStartRoom = floorManagements[currentFloor - 1].CreateDungeon.Rooms[playerStartRoomIndex];
+        _player.transform.position = new Vector3(playerStartRoom.UpperLeftPosition.x + playerStartRoom.Size.x / 2.0f, 0.1f, playerStartRoom.UpperLeftPosition.y + playerStartRoom.Size.y / 2.0f);
     }
 
     // Update is called once per frame
