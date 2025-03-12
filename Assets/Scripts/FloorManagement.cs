@@ -11,6 +11,7 @@ public class FloorManagement
     private readonly int _floorClearRoomIndex;           // 階層クリアの部屋のインデックス
     private readonly Vector2Int _floorClearPosition;     // 階層クリアの部屋の中の座標
     private readonly int _stairDirection;                // 階段の方向
+    private readonly bool[,] _minimapMask;               // ミニマップのマスク
 
     public FloorManagement(int floor, Material material)
     {
@@ -37,6 +38,27 @@ public class FloorManagement
             Random.Range(2, floorClearRoom.Size.y - 2)
         );
         _stairDirection = Random.Range(0, 4);
+        _minimapMask = new bool[CommonConst.MapHeight, CommonConst.MapWidth];
+        for(int y = 0; y < CommonConst.MapHeight; y++)
+        {
+            for(int x = 0; x < CommonConst.MapWidth; x++)
+            {
+                _minimapMask[y, x] = false;
+            }
+        }
+    }
+
+    public void SetMinimapMask(int x, int y, bool value)
+    {
+        if(x < 0 || x >= CommonConst.MapWidth)
+        {
+            throw new System.ArgumentException("x must be greater than or equal to 0 and less than CommonConst.Width.");
+        }
+        if(y < 0 || y >= CommonConst.MapHeight)
+        {
+            throw new System.ArgumentException("y must be greater than or equal to 0 and less than CommonConst.Height.");
+        }
+        _minimapMask[y, x] = value;
     }
 
     public int Floor => _floor;
@@ -45,4 +67,5 @@ public class FloorManagement
     public int FloorClearRoomIndex => _floorClearRoomIndex;
     public Vector2Int FloorClearPosition => _floorClearPosition;
     public int StairDirection => _stairDirection;
+    public bool[,] MinimapMask => _minimapMask;
 }
