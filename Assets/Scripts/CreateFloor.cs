@@ -8,10 +8,20 @@ public class CreateFloor : MonoBehaviour
     [SerializeField] GameObject _player;
     private int _currentFloor = 1;
     private FloorManagement[] floorManagements = new FloorManagement[CommonConst.MaxFloor];
+    private CommonPlayerVariable _commonPlayerVariable;
+    private MapObjects mapObjects = null;
     // Start is called before the first frame update
     void Start()
     {
+        _commonPlayerVariable = _player.GetComponent<CommonPlayerVariable>();
         CreateNewFloor(_currentFloor);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        UploadMinimapInfo();
+        UploadMinimap();
     }
 
     public void CreateNewFloor(int currentFloor)
@@ -32,7 +42,7 @@ public class CreateFloor : MonoBehaviour
         // 最終階層以外は階段を作成
         Material mat = Resources.Load<Material>("Materials/StoneWall");
         floorManagements[currentFloor - 1] = new FloorManagement(currentFloor, mat);
-        CreateRoom3DView.ViewStart(floorManagements[currentFloor - 1]);
+        mapObjects = CreateRoom3DView.ViewStart(floorManagements[currentFloor - 1]);
         // プレイヤーの初期位置を設定
         int playerStartRoomIndex = Random.Range(0, floorManagements[currentFloor - 1].CreateDungeon.Rooms.Count - 1);
         if(playerStartRoomIndex >= floorManagements[currentFloor - 1].FloorClearRoomIndex)
@@ -44,9 +54,43 @@ public class CreateFloor : MonoBehaviour
         _player.transform.position = new Vector3(playerStartRoom.UpperLeftPosition.x + playerStartRoom.Size.x / 2.0f, 0.1f, playerStartRoom.UpperLeftPosition.y + playerStartRoom.Size.y / 2.0f);
     }
 
-    // Update is called once per frame
-    // void Update()
-    // {
-        
-    // }
+    public void UploadMinimapInfo(){
+        if(floorManagements[_currentFloor - 1] == null || _player == null || _commonPlayerVariable == null || mapObjects == null)
+        {
+            throw new System.ArgumentException("FloorManagement, Player, CommonPlayerVariable, MapObjects must not be null.");
+        }
+        if(!_commonPlayerVariable.isPlayerInRoom)
+        {
+            // 通路上にプレイヤーがいる場合、周囲5×5マスを描画するようにする
+            minimapController.SetMinimapMaskInPath(floorManagements[_currentFloor - 1], _player.transform.position.x, _player.transform.position.z);
+            return;
+        }
+        // 部屋に入った場合、部屋の中を描画するようにする
+        // 最初に現在いる部屋の情報を取得する
+        foreach(Room room in mapObjects.RoomColliderObjectList.Keys)
+        {
+            if(mapObjects.RoomColliderObjectList[room].GetInstanceID() == _commonPlayerVariable.currentRoomCollider.gameObject.GetInstanceID())
+            {
+                minimapController.SetMinimapMaskInRoom(floorManagements[_currentFloor - 1], room);
+                return;
+            }
+        }
+    }
+
+    public void UploadMinimap(){
+        if(floorManagements[_currentFloor - 1] == null)
+        {
+            throw new System.ArgumentException("FloorManagement must not be null.");
+        }
+        for(int y = 0; y < CommonConst.MapHeight; y++)
+        {
+            for(int x = 0; x < CommonConst.MapWidth; x++)
+            {
+                if(floorManagements[_currentFloor - 1].CreateDungeon.Map[y, x] == CommonConst.DungeonArea && floorManagements[_currentFloor - 1].MinimapMask[y, x])
+                {
+                    mapObjects.ChangeMinimapObjectActive(x, y, true);
+                }
+            }
+        }
+    }
 }
