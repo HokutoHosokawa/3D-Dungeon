@@ -180,6 +180,7 @@ public static class CreateRoom3DView
             boxCollider.isTrigger = true;
             roomObject.transform.position = new Vector3((room.UpperLeftPosition.x + (room.Size.x - 1) / 2.0f) * FloorWidth, WallAmount * WallHeight / 2.0f, (room.UpperLeftPosition.y + (room.Size.y - 1) / 2.0f) * FloorHeight);
             boxCollider.size = new Vector3(room.Size.x * FloorWidth, WallAmount * WallHeight, room.Size.y * FloorHeight);
+            roomObject.layer = LayerMask.NameToLayer("InvisibleLayer");
             roomObject.transform.parent = roomColliderParent.transform;
             roomColliderObjects.Add(room, roomObject);
         }
