@@ -62,4 +62,6 @@ public class Enemy : Entity
         _enemy.GetComponent<EnemyMoveController>().DestroyTargetGameObject();
         Object.Destroy(_enemy);
     }
+
+    public int Level => _level;
 }

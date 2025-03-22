@@ -10,6 +10,8 @@ public class EnemyViewOnMinimap : MonoBehaviour
     private CommonPlayerVariable _playerVariable;
     private CapsuleCollider _enemyCollider;
     bool isVisible = false;
+
+    [SerializeField] private Canvas _enemyCanvas;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +21,7 @@ public class EnemyViewOnMinimap : MonoBehaviour
             Debug.LogError("EnemyMarker is not found");
         }
         _enemyMarker.SetActive(false);
+        _enemyCanvas.enabled = false;
         _enemyCollider = GetComponent<CapsuleCollider>();
         _player = GameObject.FindGameObjectWithTag("Player");
         _playerVariable = _player.GetComponent<CommonPlayerVariable>();
@@ -49,12 +52,14 @@ public class EnemyViewOnMinimap : MonoBehaviour
             if(hit.collider.gameObject != gameObject && hit.collider.gameObject != _player)
             {
                 _enemyMarker.SetActive(false);
+                _enemyCanvas.enabled = false;
                 return;
             }
             Vector3 cameraToHitTarget = hit.point - Camera.main.transform.position;
             if(!_playerVariable.isPlayerInRoom && cameraToHitTarget.magnitude > InvisibleDistanceOnPath)
             {
                 _enemyMarker.SetActive(false);
+                _enemyCanvas.enabled = false;
                 return;
             }
         }
@@ -62,9 +67,11 @@ public class EnemyViewOnMinimap : MonoBehaviour
         {
             Debug.Log("Invisible Because the ray does not hit anything");
             _enemyMarker.SetActive(false);
+            _enemyCanvas.enabled = false;
             return;
         }
         _enemyMarker.SetActive(true);
+        _enemyCanvas.enabled = true;
     }
 
     private void EnemyIsOnInvisible()
@@ -74,6 +81,7 @@ public class EnemyViewOnMinimap : MonoBehaviour
             return;
         }
         _enemyMarker.SetActive(false);
+        _enemyCanvas.enabled = false;
     }
 
     private void OnBecameVisible()

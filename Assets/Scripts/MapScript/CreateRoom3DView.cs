@@ -5,7 +5,7 @@ using UnityEngine;
 // 部屋を描画するクラス
 public static class CreateRoom3DView
 {
-    private static readonly int WallAmount = 2;
+    private static readonly int WallAmount = 3;
     private static readonly float WallThickness = 0.2f;
     private static readonly float WallHeight = 1.0f;
     // private static readonly float WallWidth = 1.0f;
