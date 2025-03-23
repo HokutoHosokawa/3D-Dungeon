@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Player : Entity
@@ -12,6 +13,9 @@ public class Player : Entity
     private int _level;
     private int _maxLevel;
     private int _maxExp;
+    private GameObject _userInterfaceObject;
+    private HitPointBarController _hitPointBarController;
+    private LevelTextController _levelTextController;
 
     public Player(string fileName) : base(GetDefaultStatusFromFile(fileName))
     {
@@ -21,6 +25,11 @@ public class Player : Entity
             _level = 1;
             _maxLevel = maxExps.Length;
             _maxExp = maxExps[_level - 1];
+            _userInterfaceObject = GameObject.Find("UserInterfaceObject");
+            _hitPointBarController = _userInterfaceObject.GetComponent<HitPointBarController>();
+            _hitPointBarController.UpdateHitPointBar(HP);
+            _levelTextController = _userInterfaceObject.GetComponent<LevelTextController>();
+            _levelTextController.UpdateLevelText(_level);
             return;
         }
         List<int[]> intList = TextToIntArray.ConvertFromFile(fileName);
@@ -32,6 +41,11 @@ public class Player : Entity
         _level = 1;
         _maxLevel = maxExps.Length;
         _maxExp = maxExps[_level - 1];
+        _userInterfaceObject = GameObject.Find("UserInterfaceObject");
+        _hitPointBarController = _userInterfaceObject.GetComponent<HitPointBarController>();
+        _hitPointBarController.UpdateHitPointBar(HP);
+        _levelTextController = _userInterfaceObject.GetComponent<LevelTextController>();
+        _levelTextController.UpdateLevelText(_level);
     }
 
     private static (int defaultPower, int defaultDefence, int maxHitPoint) GetDefaultStatusFromFile(string fileName)
@@ -71,11 +85,14 @@ public class Player : Entity
         DefaultPowerChange(defaultPowers[_level - 1]);
         DefaultDefenceChange(defaultDefences[_level - 1]);
         MaxHitPointChange(maxHitPoints[_level - 1]);
+        _hitPointBarController.UpdateHitPointBar(HP);
+        _levelTextController.UpdateLevelText(_level);
     }
 
     public override void Damage(int damage)
     {
         base.Damage(damage);
+        _hitPointBarController.UpdateHitPointBar(HP);
         if (HP.CurrentHitPoint <= 0)
         {
             GameOver();
@@ -85,6 +102,7 @@ public class Player : Entity
     public override void DamageRateFromMaxHP(float damageRate)
     {
         base.DamageRateFromMaxHP(damageRate);
+        _hitPointBarController.UpdateHitPointBar(HP);
         if (HP.CurrentHitPoint <= 0)
         {
             GameOver();
@@ -94,6 +112,7 @@ public class Player : Entity
     public override void DamageRateFromCurrentHP(float damageRate)
     {
         base.DamageRateFromCurrentHP(damageRate);
+        _hitPointBarController.UpdateHitPointBar(HP);
         if (HP.CurrentHitPoint <= 0)
         {
             GameOver();
@@ -103,6 +122,7 @@ public class Player : Entity
     private void GameOver()
     {
         // ゲームオーバー処理
+        Debug.Log("GameOver");
     }
 
     public int Level => _level;
