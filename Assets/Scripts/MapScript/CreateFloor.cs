@@ -13,12 +13,14 @@ public class CreateFloor : MonoBehaviour
     private FloorManagement[] floorManagements = new FloorManagement[CommonConst.MaxFloor];
     private CommonPlayerVariable _commonPlayerVariable;
     private MapObjects mapObjects;
+
+    public int CurrentFloor => _currentFloor;
+
     // Start is called before the first frame update
     void Start()
     {
         _commonPlayerVariable = _player.GetComponent<CommonPlayerVariable>();
         CreateNewFloor(_currentFloor);
-        _navMeshSurface.BuildNavMesh();
     }
 
     // Update is called once per frame
@@ -38,14 +40,24 @@ public class CreateFloor : MonoBehaviour
         {
             throw new System.ArgumentException("Floor must be less than or equal to CommonConst.MaxFloor.");
         }
-        if(floorManagements[currentFloor - 1] != null)
+        _currentFloor = currentFloor;
+        if(mapObjects != null)
         {
-            // 既に作成済みの階層は作成しない
-            return;
+            mapObjects.Destroy();
+            _player.transform.position = new Vector3(-1, 0, -1);
+            GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+            foreach(GameObject enemy in enemies)
+            {
+                enemy.GetComponent<EnemyMoveController>().DestroyTargetGameObject();
+                Destroy(enemy);
+            }
         }
         // 最終階層以外は階段を作成
         Material mat = Resources.Load<Material>("Materials/StoneWall");
-        floorManagements[currentFloor - 1] = new FloorManagement(currentFloor, mat);
+        if(floorManagements[currentFloor - 1] == null)
+        {
+            floorManagements[currentFloor - 1] = new FloorManagement(currentFloor, mat);
+        }
         mapObjects = CreateRoom3DView.ViewStart(floorManagements[currentFloor - 1]);
         // プレイヤーの初期位置を設定
         int playerStartRoomIndex = Random.Range(CommonConst.MinIndex, floorManagements[currentFloor - 1].CreateDungeon.Rooms.Count - 1);
@@ -56,6 +68,7 @@ public class CreateFloor : MonoBehaviour
         }
         Room playerStartRoom = floorManagements[currentFloor - 1].CreateDungeon.Rooms[playerStartRoomIndex];
         _player.transform.position = new Vector3((playerStartRoom.UpperLeftPosition.x + playerStartRoom.Size.x / 2.0f) * CommonConst.FloorWidth, FloorThickness / 2.0f, (playerStartRoom.UpperLeftPosition.y + playerStartRoom.Size.y / 2.0f) * CommonConst.FloorHeight);
+        _navMeshSurface.BuildNavMesh();
     }
 
     public void UploadMinimapInfo(){

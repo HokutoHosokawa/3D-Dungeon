@@ -20,10 +20,12 @@ public static class CreateRoom3DView
         GameObject wallPrefab = Resources.Load<GameObject>("Prefabs/PlaneWall");
         GameObject invisibleWallPrefab = Resources.Load<GameObject>("Prefabs/InvisibleWall");
         GameObject invisibleWallCornerPrefab = Resources.Load<GameObject>("Prefabs/InvisibleWallCorner");
+        GameObject healObject = Resources.Load<GameObject>("Prefabs/HealObject");
         GameObject stairPrefab = Resources.Load<GameObject>("Prefabs/Stairs");
         GameObject clearOrbPrefab = Resources.Load<GameObject>("Prefabs/MagicOrb");
         Material minimapMaterial = Resources.Load<Material>("Materials/Minimap");
         Material minimapStairsMaterial = Resources.Load<Material>("Materials/MinimapStairsMaterials");
+        Material minimapHealObjectMaterial = Resources.Load<Material>("Materials/HealObjectMaterial");
 
         CreateDungeon createDungeon = floorManagement.CreateDungeon;
         List<GameObject> mapObjects = new List<GameObject>();
@@ -34,6 +36,8 @@ public static class CreateRoom3DView
         Room floorClearRoom = createDungeon.Rooms[floorManagement.FloorClearRoomIndex];
         Vector2Int floorClearPosition = floorManagement.FloorClearPosition;
         int stairDirection = floorManagement.StairDirection;
+        Room healObjectRoom = createDungeon.Rooms[floorManagement.HealObjectRoomIndex];
+        Vector2Int healObjectPosition = floorManagement.HealObjectPosition;
 
         GameObject mapObjectParent = GameObject.Find("Map");
         GameObject minimapObjectParent = GameObject.Find("MinimapObject");
@@ -151,8 +155,12 @@ public static class CreateRoom3DView
                         }
                         MeshRenderer[] meshRenderers = stairs.GetComponentsInChildren<MeshRenderer>();
                         foreach(MeshRenderer meshRenderer in meshRenderers){
+                            if(meshRenderer.gameObject.name == "CheckText"){
+                                continue;
+                            }
                             meshRenderer.material = floorManagement.WallFloorMaterial;
                         }
+                        stairs.transform.Find("StairCollider").gameObject.GetComponent<CommonCheckEvent>().SetEventTemplate(new StairEvent());
                         stairs.transform.parent = mapObjectParent.transform;
                         mapObjects.Add(stairs);
                     }
@@ -162,8 +170,19 @@ public static class CreateRoom3DView
                 }
                 if(floorManagement.Floor == CommonConst.MaxFloor && x == floorClearRoom.UpperLeftPosition.x + floorClearPosition.x && y == floorClearRoom.UpperLeftPosition.y + floorClearPosition.y){
                     GameObject clearOrb = GameObject.Instantiate(clearOrbPrefab, new Vector3(x * FloorWidth, WallHeight / 2.0f, y * FloorHeight), Quaternion.identity);
+                    clearOrb.transform.Find("MagicOrbCollider").gameObject.GetComponent<CommonCheckEvent>().SetEventTemplate(new ClearOrbEvent());
                     clearOrb.transform.parent = mapObjectParent.transform;
                     mapObjects.Add(clearOrb);
+                    minimapObject.GetComponent<Renderer>().material = minimapStairsMaterial;
+                    minimapObjects[new Vector2Int(x, y)] = minimapObject;
+                }
+                if(x == healObjectRoom.UpperLeftPosition.x + healObjectPosition.x && y == healObjectRoom.UpperLeftPosition.y + healObjectPosition.y){
+                    GameObject healObjectInstance = GameObject.Instantiate(healObject, new Vector3(x * FloorWidth, FloorThickness / 2.0f, y * FloorHeight), Quaternion.identity);
+                    healObjectInstance.transform.Find("HealObjectCollider").gameObject.GetComponent<CommonCheckEvent>().SetEventTemplate(new HealObjectEvent());
+                    healObjectInstance.transform.parent = mapObjectParent.transform;
+                    mapObjects.Add(healObjectInstance);
+                    minimapObject.GetComponent<Renderer>().material = minimapHealObjectMaterial;
+                    minimapObjects[new Vector2Int(x, y)] = minimapObject;
                 }
                 // 床を生成
                 GameObject floor = GameObject.Instantiate(floorPrefab, new Vector3(x * FloorWidth, 0, y * FloorHeight), Quaternion.identity);

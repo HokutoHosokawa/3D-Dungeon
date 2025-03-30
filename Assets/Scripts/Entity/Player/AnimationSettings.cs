@@ -61,13 +61,41 @@ public class AnimationSettings : MonoBehaviour
             return;
         }
 
+        RaycastHit hit2;
+        float angleY = 0;
+        Vector3 rayPos = transform.position;
+        Vector3 floorNormal = Vector3.up;
+        if(Physics.Raycast(transform.position, Vector3.down, out hit2, 3.0f))
+        {
+            angleY = Vector3.Angle(hit2.normal, Vector3.up);
+            rayPos = hit2.point;
+            floorNormal = hit2.normal;
+        }
         Vector3 direction = new Vector3(moveX, 0, moveY); //X方向とZ方向の入力の大きさを取得
-        Vector3 cameraForward = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 cameraForwardOnFlat = Vector3.Scale(transform.forward, new Vector3(1, 0, 1)).normalized;
+        Vector3 cameraForward;
+        Vector3 cameraRight;
+        if(angleY == 0)
+        {
+            cameraForward = cameraForwardOnFlat;
+        }
+        else
+        {
+            RaycastHit hit3;
+            Vector3 rayPos2 = rayPos + cameraForwardOnFlat * 0.08f;
+            if(Physics.Raycast(transform.position + cameraForwardOnFlat * 0.08f, Vector3.down, out hit3, 3.0f))
+            {
+                rayPos2 = hit3.point;
+            }
+            cameraForward = (rayPos2 - rayPos).normalized;
+        }
+        cameraRight = Vector3.Cross(floorNormal, cameraForward).normalized;
         if(direction.magnitude > 1)
         {
             direction.Normalize();
         }
-        Vector3 moveVector = direction.z * transform.forward + direction.x * transform.right;
+        // Vector3 moveVector = direction.z * transform.forward + direction.x * transform.right;
+        Vector3 moveVector = direction.z * cameraForward + direction.x * cameraRight;
         if(Vector3.Dot(moveVector.normalized, cameraForward) > Mathf.Cos(ForwardDegree * Mathf.Deg2Rad))
         {
             // 正面と移動する方向の内積がcos(50°)より大きい場合は前進
