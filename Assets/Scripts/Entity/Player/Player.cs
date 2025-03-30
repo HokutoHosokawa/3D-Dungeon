@@ -119,6 +119,24 @@ public class Player : Entity
         }
     }
 
+    public override void Heal(int heal)
+    {
+        base.Heal(heal);
+        _hitPointBarController.UpdateHitPointBar(HP);
+    }
+
+    public override void HealRateFromMaxHP(float healRate)
+    {
+        base.HealRateFromMaxHP(healRate);
+        _hitPointBarController.UpdateHitPointBar(HP);
+    }
+
+    public override void HealRateFromCurrentHP(float healRate)
+    {
+        base.HealRateFromCurrentHP(healRate);
+        _hitPointBarController.UpdateHitPointBar(HP);
+    }
+
     private void GameOver()
     {
         // ゲームオーバー処理

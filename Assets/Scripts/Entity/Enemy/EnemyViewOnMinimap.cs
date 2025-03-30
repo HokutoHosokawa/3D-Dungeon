@@ -65,7 +65,7 @@ public class EnemyViewOnMinimap : MonoBehaviour
         }
         else
         {
-            Debug.Log("Invisible Because the ray does not hit anything");
+            // Debug.Log("Invisible Because the ray does not hit anything");
             _enemyMarker.SetActive(false);
             _enemyCanvas.enabled = false;
             return;

@@ -35,6 +35,7 @@ public class EnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        _enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
         if(_enemyCount >= MaxEnemyCount)
         {
             return;
@@ -132,7 +133,6 @@ public class EnemySpawner : MonoBehaviour
                 {
                     enemy = Instantiate(Resources.Load("Prefabs/Enemy/" + enemyName), hit.position, Quaternion.identity) as GameObject;
                     enemy.GetComponent<EnemyStatus>().Initialize(new Enemy(_enemyControllers[enemyName].enemyController.GetStatus(enemyLevel), enemy));
-                    _enemyCount++;
                     return;
                 }
                 else

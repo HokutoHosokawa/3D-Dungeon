@@ -9,6 +9,7 @@ public class EnemyAttack : MonoBehaviour
     private GameObject _player;
     private Player _playerStatus;
     private Enemy _enemy;
+    private int _attackCounter = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,9 +20,22 @@ public class EnemyAttack : MonoBehaviour
         _enemy = GetComponentInParent<EnemyStatus>().EnemyInfo;
     }
 
+    void Update()
+    {
+        if(!_attackCollider.enabled)
+        {
+            _attackCounter = 0;
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.tag != "Player")
+        {
+            return;
+        }
+        _attackCounter++;
+        if(_attackCounter > 1)
         {
             return;
         }

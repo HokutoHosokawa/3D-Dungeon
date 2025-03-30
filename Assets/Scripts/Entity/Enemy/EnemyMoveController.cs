@@ -287,7 +287,7 @@ public class EnemyMoveController : MonoBehaviour
             SetTargetToNewGameObject();
         }
     }
-    
+
     public void DestroyTargetGameObject()
     {
         if(_targetGameObject == null || _targetGameObject == _player)

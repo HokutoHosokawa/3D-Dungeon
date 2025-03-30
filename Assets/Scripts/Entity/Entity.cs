@@ -161,17 +161,17 @@ public class Entity
         _hp = _hp.DamageRateFromCurrentHP(damageRate);
     }
 
-    public void Heal(int heal)
+    public virtual void Heal(int heal)
     {
         _hp = _hp.Heal(heal);
     }
 
-    public void HealRateFromMaxHP(float healRate)
+    public virtual void HealRateFromMaxHP(float healRate)
     {
         _hp = _hp.HealRateFromMaxHP(healRate);
     }
 
-    public void HealRateFromCurrentHP(float healRate)
+    public virtual void HealRateFromCurrentHP(float healRate)
     {
         _hp = _hp.HealRateFromCurrentHP(healRate);
     }
