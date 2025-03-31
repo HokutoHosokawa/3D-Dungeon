@@ -5,7 +5,7 @@ using UnityEngine;
 public class AnimationSettings : MonoBehaviour
 {
     readonly float WalkingSpeed = 7.5f;
-    readonly float JumpSpeed = 5f;
+    readonly float JumpSpeed = 50f;
     readonly float ForwardDegree = 50f;
     readonly float DistanceToWalkForwardBetweenPlayerAndGround = 0.3f;
     readonly float TimeToWalkSpeedDecreaseSlowly = 1.0f;
@@ -48,13 +48,11 @@ public class AnimationSettings : MonoBehaviour
             anim.SetBool("IsSideWalking", false);
             return;
         }
-        if(!onGround)
+        ray = new Ray(transform.position + new Vector3(0, 0.45f, 0), Vector3.down);
+        bool isHit = Physics.Raycast(ray, out hit, rayDistance);
+        if(!onGround && isHit)
         {
-            ray = new Ray(transform.position + new Vector3(0, 0.45f, 0), Vector3.down);
-            if(Physics.Raycast(ray, out hit, rayDistance))
-            {
-                onGround = true;
-            }
+            onGround = true;
         }
         if(onGround)
         {
