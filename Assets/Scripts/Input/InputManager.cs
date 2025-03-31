@@ -6,7 +6,13 @@ public static class InputManager
 {
     private static Dictionary<string, KeyCode> _keyCodeDict = new Dictionary<string, KeyCode>()
     {
-        {"Action", KeyCode.F}
+        {"Action", KeyCode.F},
+        {"Forward", KeyCode.W},
+        {"Backward", KeyCode.S},
+        {"Left", KeyCode.A},
+        {"Right", KeyCode.D},
+        {"Jump", KeyCode.Space},
+        {"Attack", KeyCode.Mouse0}
     };
     public static Dictionary<string, KeyCode> KeyCodeDict => _keyCodeDict;
     public static bool IsKeyPressed(KeyCode keyCode)
