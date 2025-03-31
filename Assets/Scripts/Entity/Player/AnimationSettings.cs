@@ -87,10 +87,6 @@ public class AnimationSettings : MonoBehaviour
         // Input.GetAxisを再現すると、経過時間の3倍の量が移動量となっているので、3倍している
         myMoveX = Mathf.Clamp((pushedTime[CommonConst.RightDirection] - pushedTime[CommonConst.LeftDirection]) * 3.0f, -1.0f, 1.0f);
         myMoveY = Mathf.Clamp((pushedTime[CommonConst.UpDirection] - pushedTime[CommonConst.DownDirection]) * 3.0f, -1.0f, 1.0f);
-        if(myMoveX != 0.0f || myMoveY != 0.0f)
-        {
-            Debug.Log("myMoveX: " + myMoveX + ", myMoveY: " + myMoveY);
-        }
         if(myMoveX == 0 && myMoveY == 0)
         {
             anim.SetBool("IsWalking", false);
@@ -167,13 +163,11 @@ public class AnimationSettings : MonoBehaviour
         {
             if(!isMoving[i] && InputManager.IsKeyPressed(InputManager.GetKeyCode(directions[i])))
             {
-                Debug.Log("Key Pressed: " + directions[i]);
                 isMoving[i] = true;
                 previousFixedUpdateTime[i] = Time.realtimeSinceStartup - Time.deltaTime;
             }
             if(isMoving[i] && !InputManager.IsKeyPressed(InputManager.GetKeyCode(directions[i])))
             {
-                Debug.Log("Key Released: " + directions[i]);
                 isMoving[i] = false;
                 previousFixedUpdateTime[i] = Time.realtimeSinceStartup;
                 bool isReverseDirectionKeyPressed = false;
