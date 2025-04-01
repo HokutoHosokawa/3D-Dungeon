@@ -5,10 +5,11 @@ using UnityEngine;
 public class AnimationSettings : MonoBehaviour
 {
     readonly float WalkingSpeed = 7.5f;
-    readonly float JumpSpeed = 50f;
+    readonly float JumpSpeed = 67f;
     readonly float ForwardDegree = 50f;
     readonly float DistanceToWalkForwardBetweenPlayerAndGround = 0.3f;
     readonly float TimeToWalkSpeedDecreaseSlowly = 1.0f;
+    readonly float MinJumpTime = 1.0f;
     private Animator anim = null;
     private Rigidbody rb = null;
 
@@ -16,6 +17,7 @@ public class AnimationSettings : MonoBehaviour
     private RaycastHit hit;
     private float rayDistance = 0.5f;
     private bool onGround = true;
+    private float jumpTime = 0.0f;
 
     private bool[] isMoving = new bool[4];
     private float[] previousFixedUpdateTime = new float[4];
@@ -50,9 +52,14 @@ public class AnimationSettings : MonoBehaviour
         }
         ray = new Ray(transform.position + new Vector3(0, 0.45f, 0), Vector3.down);
         bool isHit = Physics.Raycast(ray, out hit, rayDistance);
-        if(!onGround && isHit)
+        if(!onGround)
+        {
+            jumpTime += Time.fixedDeltaTime;
+        }
+        if(!onGround && isHit && jumpTime > MinJumpTime)
         {
             onGround = true;
+            jumpTime = 0.0f;
         }
         if(onGround)
         {
@@ -60,7 +67,7 @@ public class AnimationSettings : MonoBehaviour
         }
         if(InputManager.IsKeyPressed(InputManager.GetKeyCode("Jump")) && onGround)
         {
-            rb.AddForce(Vector3.up * JumpSpeed, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * rb.mass * JumpSpeed, ForceMode.Impulse);
             onGround = false;
             anim.SetTrigger("JumpStart");
         }
