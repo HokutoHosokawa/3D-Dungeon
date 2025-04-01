@@ -33,8 +33,9 @@ public class SwordAttack : MonoBehaviour
     private void AttackToEnemy(GameObject enemy)
     {
         // 敵にダメージを与える処理
-        Enemy enemyStatus = enemy.GetComponent<EnemyStatus>().EnemyInfo;
-        enemyStatus.Damage(Mathf.Max(0, playerStatus.PowerValue.CurrentPower - enemyStatus.DefenceValue.CurrentDefence));
+        // Enemy enemyStatus = enemy.GetComponent<EnemyStatus>().EnemyInfo;
+        // enemyStatus.Damage(Mathf.Max(0, playerStatus.PowerValue.CurrentPower - enemyStatus.DefenceValue.CurrentDefence));
+        enemy.GetComponent<EnemyStatus>().Damage(Mathf.Max(0, playerStatus.PowerValue.CurrentPower - enemy.GetComponent<EnemyStatus>().EnemyInfo.DefenceValue.CurrentDefence));
         enemy.GetComponent<EnemyMoveController>().SetTargetToPlayer();
     }
 }
