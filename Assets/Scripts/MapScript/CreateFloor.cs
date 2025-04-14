@@ -68,6 +68,7 @@ public class CreateFloor : MonoBehaviour
         }
         Room playerStartRoom = floorManagements[currentFloor - 1].CreateDungeon.Rooms[playerStartRoomIndex];
         _player.transform.position = new Vector3((playerStartRoom.UpperLeftPosition.x + playerStartRoom.Size.x / 2.0f) * CommonConst.FloorWidth, FloorThickness / 2.0f, (playerStartRoom.UpperLeftPosition.y + playerStartRoom.Size.y / 2.0f) * CommonConst.FloorHeight);
+        _player.GetComponent<PlayerViewController>().InitRoomObjectState();
         _navMeshSurface.BuildNavMesh();
     }
 
@@ -114,5 +115,10 @@ public class CreateFloor : MonoBehaviour
     public FloorManagement GetCurrentFloorManagement()
     {
         return floorManagements[_currentFloor - 1];
+    }
+
+    public MapObjects GetMapObjects()
+    {
+        return mapObjects;
     }
 }
