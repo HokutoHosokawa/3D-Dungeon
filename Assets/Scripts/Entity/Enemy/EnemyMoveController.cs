@@ -39,6 +39,7 @@ public class EnemyMoveController : MonoBehaviour
         _targetGameObject = CreateTargetGameObject.CreateTarget(gameObject);
         _player = GameObject.FindGameObjectWithTag("Player");
         _navMeshAgent = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        _navMeshAgent.areaMask |= 1 << LayerMask.NameToLayer("PatitionLayer");
         _navMeshAgent.SetDestination(_targetGameObject.transform.position);
         _commonEnemyVariable = GetComponent<CommonEnemyVariable>();
         _commonPlayerVariable = _player.GetComponent<CommonPlayerVariable>();

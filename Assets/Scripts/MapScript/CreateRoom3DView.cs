@@ -10,6 +10,7 @@ public static class CreateRoom3DView
     private static readonly float WallHeight = 1.0f;
     // private static readonly float WallWidth = 1.0f;
     private static readonly float InvisibleWallThickness = 0.23f;
+    private static readonly float PatitionDistance = 2.0f;
     private static readonly float FloorWidth = CommonConst.FloorWidth;
     private static readonly float FloorHeight = CommonConst.FloorHeight;
     private static readonly float FloorThickness = CommonConst.FloorThickness;
@@ -23,6 +24,8 @@ public static class CreateRoom3DView
         GameObject healObject = Resources.Load<GameObject>("Prefabs/HealObject");
         GameObject stairPrefab = Resources.Load<GameObject>("Prefabs/Stairs");
         GameObject clearOrbPrefab = Resources.Load<GameObject>("Prefabs/MagicOrb");
+        // GameObject roomPatitionPrefab = Resources.Load<GameObject>("Prefabs/RoomPatition");
+        GameObject roomPatitionPrefab = Resources.Load<GameObject>("Prefabs/FogParticle");
         Material minimapMaterial = Resources.Load<Material>("Materials/Minimap");
         Material minimapStairsMaterial = Resources.Load<Material>("Materials/MinimapStairsMaterials");
         Material minimapHealObjectMaterial = Resources.Load<Material>("Materials/HealObjectMaterial");
@@ -198,6 +201,59 @@ public static class CreateRoom3DView
             BoxCollider boxCollider = roomObject.AddComponent<BoxCollider>();
             boxCollider.isTrigger = true;
             roomObject.transform.position = new Vector3((room.UpperLeftPosition.x + (room.Size.x - 1) / 2.0f) * FloorWidth, WallAmount * WallHeight / 2.0f, (room.UpperLeftPosition.y + (room.Size.y - 1) / 2.0f) * FloorHeight);
+            // 通路の位置を把握し、その位置にQuad(roomPatitionPrefab)を生成する
+            for(int i = 0; i < room.Size.x; ++i){
+                if(room.UpperLeftPosition.y != 0)
+                {
+                    if(map[room.UpperLeftPosition.y - 1, room.UpperLeftPosition.x + i] == CommonConst.DungeonArea)
+                    {
+                        // 通路が上にある場合
+                        GameObject roomPatition = GameObject.Instantiate(roomPatitionPrefab, new Vector3((room.UpperLeftPosition.x + i) * FloorWidth, roomObject.transform.position.y, (room.UpperLeftPosition.y - PatitionDistance) * FloorHeight), Quaternion.Euler(new Vector3(0, 180, 0)), roomObject.transform);
+                        // roomPatition.transform.localScale = new Vector3(FloorWidth, WallAmount * WallHeight, 1f);
+                    }
+                }
+                if(room.UpperLeftPosition.y + room.Size.y != CommonConst.MapHeight - 1)
+                {
+                    if(map[room.UpperLeftPosition.y + room.Size.y, room.UpperLeftPosition.x + i] == CommonConst.DungeonArea)
+                    {
+                        // 通路が下にある場合
+                        GameObject roomPatition = GameObject.Instantiate(roomPatitionPrefab, new Vector3((room.UpperLeftPosition.x + i) * FloorWidth, roomObject.transform.position.y, (room.UpperLeftPosition.y + room.Size.y - 1.0f + PatitionDistance) * FloorHeight), Quaternion.Euler(new Vector3(0, 0, 0)), roomObject.transform);
+                        // roomPatition.transform.localScale = new Vector3(FloorWidth, WallAmount * WallHeight, 1f);
+                    }
+                }
+            }
+            for(int i = 0; i < room.Size.y; ++i){
+                if(room.UpperLeftPosition.x != 0)
+                {
+                    if(map[room.UpperLeftPosition.y + i, room.UpperLeftPosition.x - 1] == CommonConst.DungeonArea)
+                    {
+                        // 通路が左にある場合
+                        GameObject roomPatition = GameObject.Instantiate(roomPatitionPrefab, new Vector3((room.UpperLeftPosition.x - PatitionDistance) * FloorWidth, roomObject.transform.position.y, (room.UpperLeftPosition.y + i) * FloorHeight), Quaternion.Euler(new Vector3(0, 270, 0)), roomObject.transform);
+                        // roomPatition.transform.localScale = new Vector3(FloorHeight, WallAmount * WallHeight, 1f);
+                    }
+                }
+                if(room.UpperLeftPosition.x + room.Size.x != CommonConst.MapWidth - 1)
+                {
+                    if(map[room.UpperLeftPosition.y + i, room.UpperLeftPosition.x + room.Size.x] == CommonConst.DungeonArea)
+                    {
+                        // 通路が右にある場合
+                        GameObject roomPatition = GameObject.Instantiate(roomPatitionPrefab, new Vector3((room.UpperLeftPosition.x + room.Size.x - 1.0f + PatitionDistance) * FloorWidth, roomObject.transform.position.y, (room.UpperLeftPosition.y + i) * FloorHeight), Quaternion.Euler(new Vector3(0, 90, 0)), roomObject.transform);
+                        // roomPatition.transform.localScale = new Vector3(FloorHeight, WallAmount * WallHeight, 1f);
+                    }
+                }
+            }
+            // Vector3 roomPatitionPos1 = new Vector3(roomObject.transform.position.x, roomObject.transform.position.y, (room.UpperLeftPosition.y - 1.5f) * FloorHeight);
+            // GameObject roomPatition1 = GameObject.Instantiate(roomPatitionPrefab, roomPatitionPos1, Quaternion.Euler(new Vector3(0, 180, 0)), roomObject.transform);
+            // roomPatition1.transform.localScale = new Vector3((room.Size.x + 2) * FloorWidth, WallAmount * WallHeight, 1f);
+            // Vector3 roomPatitionPos2 = new Vector3((room.UpperLeftPosition.x + room.Size.x + 0.5f) * FloorWidth, roomObject.transform.position.y, roomObject.transform.position.z);
+            // GameObject roomPatition2 = GameObject.Instantiate(roomPatitionPrefab, roomPatitionPos2, Quaternion.Euler(new Vector3(0, 90, 0)), roomObject.transform);
+            // roomPatition2.transform.localScale = new Vector3((room.Size.y + 2) * FloorHeight, WallAmount * WallHeight, 1f);
+            // Vector3 roomPatitionPos3 = new Vector3(roomObject.transform.position.x, roomObject.transform.position.y, (room.UpperLeftPosition.y + room.Size.y + 0.5f) * FloorHeight);
+            // GameObject roomPatition3 = GameObject.Instantiate(roomPatitionPrefab, roomPatitionPos3, Quaternion.Euler(new Vector3(0, 0, 0)), roomObject.transform);
+            // roomPatition3.transform.localScale = new Vector3((room.Size.x + 2) * FloorWidth, WallAmount * WallHeight, 1f);
+            // Vector3 roomPatitionPos4 = new Vector3((room.UpperLeftPosition.x - 1.5f) * FloorWidth, roomObject.transform.position.y, roomObject.transform.position.z);
+            // GameObject roomPatition4 = GameObject.Instantiate(roomPatitionPrefab, roomPatitionPos4, Quaternion.Euler(new Vector3(0, 270, 0)), roomObject.transform);
+            // roomPatition4.transform.localScale = new Vector3((room.Size.y + 2) * FloorHeight, WallAmount * WallHeight, 1f);
             boxCollider.size = new Vector3(room.Size.x * FloorWidth, WallAmount * WallHeight, room.Size.y * FloorHeight);
             roomObject.layer = LayerMask.NameToLayer("InvisibleLayer");
             roomObject.transform.parent = roomColliderParent.transform;
