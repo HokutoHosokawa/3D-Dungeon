@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 // 部屋を描画するクラス
@@ -15,7 +16,7 @@ public static class CreateRoom3DView
     private static readonly float FloorHeight = CommonConst.FloorHeight;
     private static readonly float FloorThickness = CommonConst.FloorThickness;
 
-    public static MapObjects ViewStart(FloorManagement floorManagement)
+    public static async Task<MapObjects> ViewStart(FloorManagement floorManagement)
     {
         GameObject floorPrefab = Resources.Load<GameObject>("Prefabs/PlaneFloor");
         GameObject wallPrefab = Resources.Load<GameObject>("Prefabs/PlaneWall");

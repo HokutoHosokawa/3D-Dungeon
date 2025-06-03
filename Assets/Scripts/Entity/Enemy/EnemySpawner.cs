@@ -60,9 +60,9 @@ public class EnemySpawner : MonoBehaviour
         {
             sumWeight += EnemyNames[i].spawnWeight;
         }
-        for(int i = 0; i < EnemyTypes; i++)
+        for (int i = 0; i < EnemyTypes; i++)
         {
-            _enemyControllers.Add(EnemyNames[i].enemyName, (EnemyNames[i].spawnWeight, new EnemyController("Scripts/EntityData/" + EnemyNames[i].enemyName + ".txt")));
+            _enemyControllers.Add(EnemyNames[i].enemyName, (EnemyNames[i].spawnWeight, new EnemyController("EntityData/" + EnemyNames[i].enemyName)));
         }
         return sumWeight;
     }
