@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.AI.Navigation;
+using System.Threading.Tasks;
 
 // 階層の作成、描画を行うクラス
 public class CreateFloor : MonoBehaviour
@@ -30,38 +31,40 @@ public class CreateFloor : MonoBehaviour
         UploadMinimap();
     }
 
-    public void CreateNewFloor(int currentFloor)
+    public async void CreateNewFloor(int currentFloor)
     {
-        if(currentFloor < CommonConst.MinFloor)
+        if (currentFloor < CommonConst.MinFloor)
         {
             throw new System.ArgumentException("Floor must be greater than CommonConst.MinFloor.");
         }
-        if(currentFloor > CommonConst.MaxFloor)
+        if (currentFloor > CommonConst.MaxFloor)
         {
             throw new System.ArgumentException("Floor must be less than or equal to CommonConst.MaxFloor.");
         }
         _currentFloor = currentFloor;
-        if(mapObjects != null)
+        if (mapObjects != null)
         {
             mapObjects.Destroy();
             _player.transform.position = new Vector3(-1, 0, -1);
             GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-            foreach(GameObject enemy in enemies)
+            foreach (GameObject enemy in enemies)
             {
                 enemy.GetComponent<EnemyMoveController>().DestroyTargetGameObject();
                 Destroy(enemy);
             }
+            _navMeshSurface.RemoveData();
         }
         // 最終階層以外は階段を作成
         Material mat = Resources.Load<Material>("Materials/StoneWall");
-        if(floorManagements[currentFloor - 1] == null)
+        if (floorManagements[currentFloor - 1] == null)
         {
             floorManagements[currentFloor - 1] = new FloorManagement(currentFloor, mat);
         }
-        mapObjects = CreateRoom3DView.ViewStart(floorManagements[currentFloor - 1]);
+        mapObjects = await CreateRoom3DView.ViewStart(floorManagements[currentFloor - 1]);
+        await Task.Delay(100); // nvaMeshSurfaceの更新のために少しディレイをいれる
         // プレイヤーの初期位置を設定
         int playerStartRoomIndex = Random.Range(CommonConst.MinIndex, floorManagements[currentFloor - 1].CreateDungeon.Rooms.Count - 1);
-        if(playerStartRoomIndex >= floorManagements[currentFloor - 1].FloorClearRoomIndex)
+        if (playerStartRoomIndex >= floorManagements[currentFloor - 1].FloorClearRoomIndex)
         {
             // クリアルームと同じ部屋にプレイヤーがいないようにする
             playerStartRoomIndex++;

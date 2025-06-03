@@ -8,7 +8,7 @@ public class PlayerStatus : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _player = new Player("Scripts/EntityData/Player.txt");
+        _player = new Player("EntityData/Player");
     }
 
     public Player PlayerInfo => _player;

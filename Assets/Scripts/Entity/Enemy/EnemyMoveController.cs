@@ -84,7 +84,12 @@ public class EnemyMoveController : MonoBehaviour
             _enemyAnimation.Idle();
         }
         // ターゲット設定
-        if(_targetGameObject != _player)
+        if (_targetGameObject == null)
+        {
+            Destroy(gameObject); // ターゲットがいない場合は敵を削除
+            return;
+        }
+        if (_targetGameObject != _player)
         {
             MoveControllWhenTargetIsNotPlayer();
         }
